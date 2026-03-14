@@ -64,13 +64,15 @@ body {
 /* ── PAGE HEADINGS ──────────────────────────────────────── */
 .page-heading { text-align: center; padding: 68px 20px 16px; }
 .page-heading h1 {
-  font-size: clamp(60px, 9.5vw, 128px); font-weight: 300;
-  color: var(--gold); letter-spacing: 0.09em; line-height: 1; text-transform: uppercase;
+  font-size: clamp(32px, 8vw, 128px); font-weight: 300;
+  color: var(--gold); letter-spacing: 0.06em; line-height: 1;
+  text-transform: uppercase; word-break: break-word;
 }
 .sub-heading { text-align: center; padding: 64px 20px 16px; }
 .sub-heading h1 {
-  font-size: clamp(48px, 7vw, 96px); font-weight: 300;
-  color: var(--gold); letter-spacing: 0.1em; line-height: 1; text-transform: uppercase;
+  font-size: clamp(28px, 7vw, 96px); font-weight: 300;
+  color: var(--gold); letter-spacing: 0.06em; line-height: 1;
+  text-transform: uppercase; word-break: break-word;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -325,8 +327,11 @@ body {
    RESPONSIVE
    ════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .site-header { padding: 0 24px; }
-  .site-footer  { padding: 18px 24px; }
+  html, body { overflow-x: hidden; }
+  .page-heading, .sub-heading { padding-left: 16px; padding-right: 16px; }
+  .page-heading h1, .sub-heading h1 { letter-spacing: 0.02em; }
+  .site-header { padding: 0 16px; }
+  .site-footer  { padding: 18px 16px; }
   .province-block .p-layout, .province-block .p-layout.reverse,
   .attraction-block .a-layout, .attraction-block .a-layout.reverse { flex-direction: column; }
   .province-block .p-layout img, .attraction-block .a-layout img { width: 100%; height: auto; max-height: 260px; }
