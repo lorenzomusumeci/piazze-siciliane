@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caltanissetta — Piazze Siciliane</title>
+  <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&display=swap');
+
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --gold:  #C9A84C;
+  --dark:  #2B2B2B;
+  --white: #FFFFFF;
+  --text:  #1E1E1E;
+  --light-border: #E8E8E8;
+}
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: var(--white);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.78;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+.site-header {
+  background-color: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 52px;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.site-header .brand {
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #fff; text-decoration: none; font-weight: 400;
+}
+.site-header nav { display: flex; align-items: center; gap: 16px; }
+.site-header nav a {
+  color: #fff; text-decoration: none; font-size: 17px;
+  font-weight: 300; letter-spacing: 0.04em; transition: color 0.2s;
+}
+.site-header nav a:hover { color: var(--gold); }
+.site-header nav .sep { color: rgba(255,255,255,0.45); font-size: 17px; font-weight: 300; }
+
+/* ── FOOTER ─────────────────────────────────────────────── */
+.site-footer {
+  background-color: var(--dark);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 22px 52px;
+}
+.site-footer a {
+  color: #fff; text-decoration: none; font-size: 17px;
+  font-weight: 300; font-style: italic; letter-spacing: 0.02em;
+}
+
+/* ── PAGE HEADINGS ──────────────────────────────────────── */
+.page-heading { text-align: center; padding: 68px 20px 16px; }
+.page-heading h1 {
+  font-size: clamp(60px, 9.5vw, 128px); font-weight: 300;
+  color: var(--gold); letter-spacing: 0.09em; line-height: 1; text-transform: uppercase;
+}
+.sub-heading { text-align: center; padding: 64px 20px 16px; }
+.sub-heading h1 {
+  font-size: clamp(48px, 7vw, 96px); font-weight: 300;
+  color: var(--gold); letter-spacing: 0.1em; line-height: 1; text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CSS-ONLY CAROUSEL — come funziona
+   ─────────────────────────────────────────────────────────
+   Ogni carousel contiene:
+     • <input type="radio"> nascosti (uno per immagine)
+     • <div class="c-slides"> con le slide
+     • <div class="btn-grp"> con le <label> come frecce
+
+   Quando un radio è :checked, il selettore  ~  applica
+   le posizioni corrette alle .c-slide corrispondenti
+   e mostra i bottoni giusti (pN = prev, nN = next).
+
+   AGGIUNGERE UN'IMMAGINE (es. 6a immagine a catania):
+   1) Aggiungi <input type="radio" name="cat" id="cat-6">
+   2) Aggiungi <div class="c-slide s6"><img ...></div>
+   3) Aggiungi bottoni: <label class="c-btn c-btn-prev p6" for="cat-5">
+                         <label class="c-btn c-btn-next n5" for="cat-6">
+      (togli il vecchio n5 che puntava a niente)
+   Le regole CSS per stato 6 small sono già scritte qui sotto.
+   ══════════════════════════════════════════════════════════ */
+
+/* Radio inputs: invisibili ma funzionali */
+.carousel-wrap input[type="radio"] {
+  position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+}
+
+/* Wrapper */
+.carousel-wrap { position: relative; width: 100%; overflow: hidden; }
+
+/* Slide container e slide */
+.carousel-wrap .c-slides { position: relative; width: 100%; height: 100%; }
+.carousel-wrap .c-slide {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 0.4s ease, width 0.4s ease, height 0.4s ease,
+              left 0.4s ease, top 0.4s ease;
+}
+.carousel-wrap .c-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Bottoni (label) */
+.carousel-wrap .btn-grp {
+  position: absolute; inset: 0; pointer-events: none; z-index: 10;
+}
+.carousel-wrap .btn-grp .c-btn {
+  display: none;
+  pointer-events: auto;
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 50px; height: 50px; border-radius: 50%;
+  background-color: var(--gold); border: none; cursor: pointer;
+  align-items: center; justify-content: center;
+  color: white; font-size: 20px; font-family: inherit;
+  line-height: 1; user-select: none; transition: background-color 0.2s;
+  text-decoration: none;
+}
+.carousel-wrap .btn-grp .c-btn:hover { background-color: #a8883a; }
+
+/* ════════════════════════════════════════════════════════
+   CAROUSEL HERO (homepage)  —  fino a 8 immagini
+   Corrente: 730×480   centrata, top 0
+   Laterali: 480×310   top 85px
+   Prev button: centro slide sinistra → left: calc(50% - 630px)
+   Next button: centro slide destra   → left: calc(50% + 580px)
+   ════════════════════════════════════════════════════════ */
+
+.carousel-hero { height: 500px; }
+
+.carousel-hero .btn-grp .c-btn-prev { left: calc(50% - 630px); }
+.carousel-hero .btn-grp .c-btn-next { left: calc(50% + 580px); }
+
+/* Stato 1 */
+#h1:checked ~ .c-slides .s1 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h1:checked ~ .c-slides .s8 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h1:checked ~ .c-slides .s2 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h1:checked ~ .btn-grp .p1 { display:flex; }
+#h1:checked ~ .btn-grp .n1 { display:flex; }
+
+/* Stato 2 */
+#h2:checked ~ .c-slides .s2 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h2:checked ~ .c-slides .s1 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h2:checked ~ .c-slides .s3 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h2:checked ~ .btn-grp .p2 { display:flex; }
+#h2:checked ~ .btn-grp .n2 { display:flex; }
+
+/* Stato 3 */
+#h3:checked ~ .c-slides .s3 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h3:checked ~ .c-slides .s2 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h3:checked ~ .c-slides .s4 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h3:checked ~ .btn-grp .p3 { display:flex; }
+#h3:checked ~ .btn-grp .n3 { display:flex; }
+
+/* Stato 4 */
+#h4:checked ~ .c-slides .s4 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h4:checked ~ .c-slides .s3 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h4:checked ~ .c-slides .s5 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h4:checked ~ .btn-grp .p4 { display:flex; }
+#h4:checked ~ .btn-grp .n4 { display:flex; }
+
+/* Stato 5 */
+#h5:checked ~ .c-slides .s5 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h5:checked ~ .c-slides .s4 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h5:checked ~ .c-slides .s6 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h5:checked ~ .btn-grp .p5 { display:flex; }
+#h5:checked ~ .btn-grp .n5 { display:flex; }
+
+/* Stato 6 */
+#h6:checked ~ .c-slides .s6 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h6:checked ~ .c-slides .s5 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h6:checked ~ .c-slides .s7 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h6:checked ~ .btn-grp .p6 { display:flex; }
+#h6:checked ~ .btn-grp .n6 { display:flex; }
+
+/* Stato 7 */
+#h7:checked ~ .c-slides .s7 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h7:checked ~ .c-slides .s6 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h7:checked ~ .c-slides .s8 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h7:checked ~ .btn-grp .p7 { display:flex; }
+#h7:checked ~ .btn-grp .n7 { display:flex; }
+
+/* Stato 8 */
+#h8:checked ~ .c-slides .s8 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h8:checked ~ .c-slides .s7 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h8:checked ~ .c-slides .s1 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h8:checked ~ .btn-grp .p8 { display:flex; }
+#h8:checked ~ .btn-grp .n8 { display:flex; }
+
+/* ════════════════════════════════════════════════════════
+   CAROUSEL SMALL (pagine provincia)  —  fino a 6 immagini
+   CSS GENERICO: funziona su qualsiasi .carousel-small
+   usando input:nth-of-type(N) e .c-slide:nth-child(N)
+
+   Corrente: 450×290   centrata, top 0
+   Laterali: 310×210   top 60px
+   Prev button → left: calc(50% - 405px)
+   Next button → left: calc(50% + 355px)
+   ════════════════════════════════════════════════════════ */
+
+.carousel-small { height: 340px; }
+
+.carousel-small .btn-grp .c-btn-prev { left: calc(50% - 405px); }
+.carousel-small .btn-grp .c-btn-next { left: calc(50% + 355px); }
+
+/* Stato 1: corrente=1, nessun prev, next=2 */
+.carousel-small > input:nth-of-type(1):checked ~ .c-slides .c-slide:nth-child(1)
+  { opacity:1; pointer-events:auto; z-index:3; width:450px; height:290px; left:calc(50% - 225px); top:0; }
+.carousel-small > input:nth-of-type(1):checked ~ .c-slides .c-slide:nth-child(2)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% + 225px); top:60px; }
+.carousel-small > input:nth-of-type(1):checked ~ .btn-grp .n1 { display:flex; }
+
+/* Stato 2: corrente=2, prev=1, next=3 */
+.carousel-small > input:nth-of-type(2):checked ~ .c-slides .c-slide:nth-child(2)
+  { opacity:1; pointer-events:auto; z-index:3; width:450px; height:290px; left:calc(50% - 225px); top:0; }
+.carousel-small > input:nth-of-type(2):checked ~ .c-slides .c-slide:nth-child(1)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% - 535px); top:60px; }
+.carousel-small > input:nth-of-type(2):checked ~ .c-slides .c-slide:nth-child(3)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% + 225px); top:60px; }
+.carousel-small > input:nth-of-type(2):checked ~ .btn-grp .p2 { display:flex; }
+.carousel-small > input:nth-of-type(2):checked ~ .btn-grp .n2 { display:flex; }
+
+/* Stato 3 */
+.carousel-small > input:nth-of-type(3):checked ~ .c-slides .c-slide:nth-child(3)
+  { opacity:1; pointer-events:auto; z-index:3; width:450px; height:290px; left:calc(50% - 225px); top:0; }
+.carousel-small > input:nth-of-type(3):checked ~ .c-slides .c-slide:nth-child(2)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% - 535px); top:60px; }
+.carousel-small > input:nth-of-type(3):checked ~ .c-slides .c-slide:nth-child(4)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% + 225px); top:60px; }
+.carousel-small > input:nth-of-type(3):checked ~ .btn-grp .p3 { display:flex; }
+.carousel-small > input:nth-of-type(3):checked ~ .btn-grp .n3 { display:flex; }
+
+/* Stato 4 */
+.carousel-small > input:nth-of-type(4):checked ~ .c-slides .c-slide:nth-child(4)
+  { opacity:1; pointer-events:auto; z-index:3; width:450px; height:290px; left:calc(50% - 225px); top:0; }
+.carousel-small > input:nth-of-type(4):checked ~ .c-slides .c-slide:nth-child(3)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% - 535px); top:60px; }
+.carousel-small > input:nth-of-type(4):checked ~ .c-slides .c-slide:nth-child(5)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% + 225px); top:60px; }
+.carousel-small > input:nth-of-type(4):checked ~ .btn-grp .p4 { display:flex; }
+.carousel-small > input:nth-of-type(4):checked ~ .btn-grp .n4 { display:flex; }
+
+/* Stato 5 */
+.carousel-small > input:nth-of-type(5):checked ~ .c-slides .c-slide:nth-child(5)
+  { opacity:1; pointer-events:auto; z-index:3; width:450px; height:290px; left:calc(50% - 225px); top:0; }
+.carousel-small > input:nth-of-type(5):checked ~ .c-slides .c-slide:nth-child(4)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% - 535px); top:60px; }
+.carousel-small > input:nth-of-type(5):checked ~ .c-slides .c-slide:nth-child(6)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% + 225px); top:60px; }
+.carousel-small > input:nth-of-type(5):checked ~ .btn-grp .p5 { display:flex; }
+.carousel-small > input:nth-of-type(5):checked ~ .btn-grp .n5 { display:flex; }
+
+/* Stato 6 (ultimo supportato: nessun next) */
+.carousel-small > input:nth-of-type(6):checked ~ .c-slides .c-slide:nth-child(6)
+  { opacity:1; pointer-events:auto; z-index:3; width:450px; height:290px; left:calc(50% - 225px); top:0; }
+.carousel-small > input:nth-of-type(6):checked ~ .c-slides .c-slide:nth-child(5)
+  { opacity:0.65; pointer-events:auto; z-index:2; width:310px; height:210px; left:calc(50% - 535px); top:60px; }
+.carousel-small > input:nth-of-type(6):checked ~ .btn-grp .p6 { display:flex; }
+
+/* ════════════════════════════════════════════════════════
+   PROVINCE LIST PAGE
+   ════════════════════════════════════════════════════════ */
+.province-list { max-width: 980px; margin: 0 auto; padding: 20px 40px 60px; }
+.province-block { margin-bottom: 70px; }
+.province-block h2 {
+  text-align: center; font-size: 32px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 24px;
+}
+.province-block .p-layout { display: flex; gap: 36px; align-items: flex-start; }
+.province-block .p-layout.reverse { flex-direction: row-reverse; }
+.province-block .p-layout img { width: 390px; height: 268px; object-fit: cover; flex-shrink: 0; display: block; }
+.province-block .p-text { font-size: 17px; font-weight: 300; line-height: 1.8; }
+.province-block .p-text p + p { margin-top: 14px; }
+.province-block .p-link {
+  display: inline-block; margin-top: 14px; font-size: 13px;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold);
+  text-decoration: none; border-bottom: 1px solid var(--gold);
+  padding-bottom: 2px; transition: opacity 0.2s;
+}
+.province-block .p-link:hover { opacity: 0.7; }
+.province-divider { border: none; border-top: 1px solid var(--light-border); margin: 0 0 70px 0; }
+
+/* ════════════════════════════════════════════════════════
+   PROVINCE DETAIL PAGE
+   ════════════════════════════════════════════════════════ */
+.detail-wrap { max-width: 840px; margin: 0 auto; padding: 32px 40px 0; }
+.detail-main-img { display: block; width: 480px; height: 320px; object-fit: cover; margin: 0 auto 34px; }
+.detail-body { font-size: 17px; font-weight: 300; line-height: 1.82; margin-bottom: 22px; }
+.detail-body p + p { margin-top: 16px; }
+.detail-attractions-label { font-size: 17px; font-weight: 300; margin-bottom: 10px; }
+.detail-list { list-style: disc; padding-left: 32px; margin-bottom: 24px; }
+.detail-list li { font-size: 16px; font-weight: 300; line-height: 1.8; margin-bottom: 5px; }
+.detail-position { font-size: 17px; font-weight: 300; line-height: 1.82; margin-bottom: 8px; }
+
+/* ════════════════════════════════════════════════════════
+   ATTRACTIONS LIST PAGE
+   ════════════════════════════════════════════════════════ */
+.attractions-list { max-width: 980px; margin: 0 auto; padding: 20px 40px 60px; }
+.attraction-block { margin-bottom: 70px; }
+.attraction-block h2 {
+  text-align: center; font-size: 27px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 24px;
+}
+.attraction-block .a-layout { display: flex; gap: 34px; align-items: flex-start; }
+.attraction-block .a-layout.reverse { flex-direction: row-reverse; }
+.attraction-block .a-layout img { width: 380px; height: 260px; object-fit: cover; flex-shrink: 0; display: block; }
+.attraction-block .a-text { font-size: 16px; font-weight: 300; line-height: 1.82; }
+.attraction-block .a-text p + p { margin-top: 12px; }
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .site-header { padding: 0 24px; }
+  .site-footer  { padding: 18px 24px; }
+  .province-block .p-layout, .province-block .p-layout.reverse,
+  .attraction-block .a-layout, .attraction-block .a-layout.reverse { flex-direction: column; }
+  .province-block .p-layout img, .attraction-block .a-layout img { width: 100%; height: auto; max-height: 260px; }
+  .province-list, .attractions-list, .detail-wrap { padding-left: 20px; padding-right: 20px; }
+  .detail-main-img { width: 100%; height: 220px; }
+
+  /* Hero mobile: solo slide corrente */
+  .carousel-hero { height: 260px; }
+  .carousel-hero .c-slide { width:88vw!important; height:240px!important; left:6vw!important; top:10px!important; opacity:0!important; }
+  #h1:checked ~ .c-slides .s1,#h2:checked ~ .c-slides .s2,#h3:checked ~ .c-slides .s3,
+  #h4:checked ~ .c-slides .s4,#h5:checked ~ .c-slides .s5,#h6:checked ~ .c-slides .s6,
+  #h7:checked ~ .c-slides .s7,#h8:checked ~ .c-slides .s8 { opacity:1!important; z-index:3; }
+  .carousel-hero .btn-grp .c-btn-prev { left:10px; }
+  .carousel-hero .btn-grp .c-btn-next { left:auto; right:10px; }
+
+  /* Small mobile: solo slide corrente */
+  .carousel-small { height: 220px; }
+  .carousel-small .c-slide { width:80vw!important; height:200px!important; left:10vw!important; top:10px!important; opacity:0!important; }
+  .carousel-small > input:nth-of-type(1):checked ~ .c-slides .c-slide:nth-child(1),
+  .carousel-small > input:nth-of-type(2):checked ~ .c-slides .c-slide:nth-child(2),
+  .carousel-small > input:nth-of-type(3):checked ~ .c-slides .c-slide:nth-child(3),
+  .carousel-small > input:nth-of-type(4):checked ~ .c-slides .c-slide:nth-child(4),
+  .carousel-small > input:nth-of-type(5):checked ~ .c-slides .c-slide:nth-child(5),
+  .carousel-small > input:nth-of-type(6):checked ~ .c-slides .c-slide:nth-child(6) { opacity:1!important; z-index:3; }
+  .carousel-small .btn-grp .c-btn-prev { left:10px; }
+  .carousel-small .btn-grp .c-btn-next { left:auto; right:10px; }
+}
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="brand">Piazze Siciliane</a>
+    <nav><a href="province.html">Province</a><span class="sep">-</span><a href="attrazioni.html">Attrazioni</a></nav>
+  </header>
+
+  <div class="sub-heading"><h1>Caltanissetta</h1></div>
+
+  <div class="detail-wrap">
+    <img class="detail-main-img" src="img/Piazza-a-Caltanissetta-Piazza-Garibaldi-2.jpg" alt="Piazza Garibaldi, Caltanissetta">
+    <div class="detail-body">
+      <p>Piazza Garibaldi è il cuore pulsante di Caltanissetta, dominata dalla Cattedrale di Santa Maria la Nova, con la sua imponente facciata barocca, e dal Palazzo del Municipio. Al centro si trova la Fontana del Tritone, elegante elemento decorativo ottocentesco.</p>
+      <p>La piazza è particolarmente animata durante la Settimana Santa, quando Caltanissetta ospita una delle processioni dei Misteri più suggestive di tutta la Sicilia, con i "Variceddi", antiche rappresentazioni sacre che attraversano le vie della città.</p>
+    </div>
+    <p class="detail-attractions-label">Le attrazioni principali sono:</p>
+    <ul class="detail-list">
+      <li><strong>Cattedrale di Santa Maria la Nova:</strong> Facciata barocca e interni decorati da affreschi di Guglielmo Borremans.</li>
+      <li><strong>Fontana del Tritone:</strong> Fontana ornamentale ottocentesca al centro della piazza.</li>
+      <li><strong>Chiesa di San Sebastiano:</strong> Pregevole chiesa barocca affacciata sulla piazza.</li>
+      <li><strong>Palazzo del Municipio:</strong> Edificio neoclassico dell'Ottocento, sede del Comune.</li>
+    </ul>
+    <p class="detail-position"><strong>Posizione:</strong> Nel centro storico di Caltanissetta, accessibile da Corso Umberto I, l'arteria principale della città.</p>
+  </div>
+
+  <div class="carousel-wrap carousel-small">
+
+    <input type="radio" name="nis" id="nis-1" checked>
+    <input type="radio" name="nis" id="nis-2">
+    <input type="radio" name="nis" id="nis-3">
+    <input type="radio" name="nis" id="nis-4">
+
+    <div class="c-slides">
+      <div class="c-slide s1"><img src="img/la nova.jpg"  alt="Cattedrale Santa Maria la Nova"></div>
+      <div class="c-slide s2"><img src="img/Monumento-a-Caltanissetta-Fontana-Tritone.jpg"     alt="Fontana del Tritone"></div>
+      <div class="c-slide s3"><img src="img/san_sebastiano.webp"     alt="Chiesa di San Sebastiano"></div>
+      <div class="c-slide s4"><img src="img/Museo-a-Caltanissetta-Palazzo-del-Carmine.jpg"   alt="Palazzo del Municipio"></div>
+    </div>
+
+    <div class="btn-grp">
+      <label class="c-btn c-btn-prev p2" for="nis-1">&#8592;</label>
+      <label class="c-btn c-btn-prev p3" for="nis-2">&#8592;</label>
+      <label class="c-btn c-btn-prev p4" for="nis-3">&#8592;</label>
+      <label class="c-btn c-btn-next n1" for="nis-2">&#8594;</label>
+      <label class="c-btn c-btn-next n2" for="nis-3">&#8594;</label>
+      <label class="c-btn c-btn-next n3" for="nis-4">&#8594;</label>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <a href="/cdn-cgi/l/email-protection#54383b26313a2e3b392127213931373d14353635373520353a3d357a3d20"><span class

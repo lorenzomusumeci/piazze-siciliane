@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Piazze Siciliane</title>
+  <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+:root {
+  --gold:  #C9A84C;
+  --dark:  #2B2B2B;
+  --white: #FFFFFF;
+  --text:  #1E1E1E;
+}
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: var(--white);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.78;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-spacer { flex: 1; }
+
+.site-header {
+  background-color: var(--dark);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; height: 52px; position: sticky; top: 0; z-index: 999;
+}
+.site-header .brand {
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #fff; text-decoration: none; font-weight: 400;
+}
+.site-header nav { display: flex; align-items: center; gap: 16px; }
+.site-header nav a {
+  color: #fff; text-decoration: none; font-size: 17px;
+  font-weight: 300; letter-spacing: 0.04em; transition: color 0.2s;
+}
+.site-header nav a:hover { color: var(--gold); }
+.site-header nav .sep { color: rgba(255,255,255,0.45); font-size: 17px; font-weight: 300; }
+
+.site-footer {
+  background-color: var(--dark);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 22px 52px;
+}
+.site-footer a {
+  color: #fff; text-decoration: none; font-size: 17px;
+  font-weight: 300; font-style: italic; letter-spacing: 0.02em;
+}
+
+.page-heading { text-align: center; padding: 68px 20px 16px; }
+.page-heading h1 {
+  font-size: clamp(32px, 8vw, 128px); font-weight: 300;
+  color: var(--gold); letter-spacing: 0.06em; line-height: 1;
+  text-transform: uppercase; word-break: break-word;
+}
+
+.carousel-wrap input[type="radio"] {
+  position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+}
+.carousel-wrap { position: relative; width: 100%; overflow: hidden; }
+.carousel-wrap .c-slides { position: relative; width: 100%; height: 100%; }
+.carousel-wrap .c-slide {
+  position: absolute; opacity: 0; pointer-events: none; overflow: hidden;
+  transition: opacity 0.4s ease, width 0.4s ease, height 0.4s ease, left 0.4s ease, top 0.4s ease;
+}
+.carousel-wrap .c-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.carousel-wrap .btn-grp { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+.carousel-wrap .btn-grp .c-btn {
+  display: none; pointer-events: auto; position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 50px; height: 50px; border-radius: 50%;
+  background-color: var(--gold); border: none; cursor: pointer;
+  align-items: center; justify-content: center;
+  color: white; font-size: 20px; font-family: inherit;
+  line-height: 1; user-select: none; transition: background-color 0.2s;
+}
+.carousel-wrap .btn-grp .c-btn:hover { background-color: #a8883a; }
+
+.carousel-hero { height: 500px; }
+.carousel-hero .btn-grp .c-btn-prev { left: calc(50% - 630px); }
+.carousel-hero .btn-grp .c-btn-next { left: calc(50% + 580px); }
+
+#h1:checked ~ .c-slides .s1 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h1:checked ~ .c-slides .s7 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h1:checked ~ .c-slides .s2 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h1:checked ~ .btn-grp .p1 { display:flex; } #h1:checked ~ .btn-grp .n1 { display:flex; }
+
+#h2:checked ~ .c-slides .s2 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h2:checked ~ .c-slides .s1 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h2:checked ~ .c-slides .s3 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h2:checked ~ .btn-grp .p2 { display:flex; } #h2:checked ~ .btn-grp .n2 { display:flex; }
+
+#h3:checked ~ .c-slides .s3 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h3:checked ~ .c-slides .s2 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h3:checked ~ .c-slides .s4 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h3:checked ~ .btn-grp .p3 { display:flex; } #h3:checked ~ .btn-grp .n3 { display:flex; }
+
+#h4:checked ~ .c-slides .s4 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h4:checked ~ .c-slides .s3 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h4:checked ~ .c-slides .s5 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h4:checked ~ .btn-grp .p4 { display:flex; } #h4:checked ~ .btn-grp .n4 { display:flex; }
+
+#h5:checked ~ .c-slides .s5 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h5:checked ~ .c-slides .s4 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h5:checked ~ .c-slides .s6 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h5:checked ~ .btn-grp .p5 { display:flex; } #h5:checked ~ .btn-grp .n5 { display:flex; }
+
+#h6:checked ~ .c-slides .s6 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h6:checked ~ .c-slides .s5 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h6:checked ~ .c-slides .s7 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h6:checked ~ .btn-grp .p6 { display:flex; } #h6:checked ~ .btn-grp .n6 { display:flex; }
+
+#h7:checked ~ .c-slides .s7 { opacity:1; pointer-events:auto; z-index:3; width:730px; height:480px; left:calc(50% - 365px); top:0; }
+#h7:checked ~ .c-slides .s6 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% - 845px); top:85px; }
+#h7:checked ~ .c-slides .s1 { opacity:0.65; pointer-events:auto; z-index:2; width:480px; height:310px; left:calc(50% + 365px); top:85px; }
+#h7:checked ~ .btn-grp .p7 { display:flex; } #h7:checked ~ .btn-grp .n7 { display:flex; }
+
+@media (max-width: 860px) {
+  html, body { overflow-x: hidden; }
+  .page-heading { padding-left: 16px; padding-right: 16px; }
+  .page-heading h1 { letter-spacing: 0.02em; }
+  .site-header { padding: 0 24px; }
+  .site-footer  { padding: 18px 24px; }
+  .carousel-hero { height: 260px; }
+  .carousel-hero .c-slide { width:88vw!important; height:240px!important; left:6vw!important; top:10px!important; opacity:0!important; }
+  #h1:checked ~ .c-slides .s1,#h2:checked ~ .c-slides .s2,#h3:checked ~ .c-slides .s3,
+  #h4:checked ~ .c-slides .s4,#h5:checked ~ .c-slides .s5,#h6:checked ~ .c-slides .s6,
+  #h7:checked ~ .c-slides .s7 { opacity:1!important; z-index:3; }
+  .carousel-hero .btn-grp .c-btn-prev { left:10px; }
+  .carousel-hero .btn-grp .c-btn-next { left:auto; right:10px; }
+}
+
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="brand">Piazze Siciliane</a>
+    <nav>
+      <a href="province.html">Province</a>
+      <span class="sep">-</span>
+      <a href="attrazioni.html">Attrazioni</a>
+    </nav>
+  </header>
+
+  <div class="page-heading">
+    <h1>Piazze Siciliane</h1>
+  </div>
+
+  <div class="carousel-wrap carousel-hero">
+
+    <input type="radio" name="hero" id="h1" checked>
+    <input type="radio" name="hero" id="h2">
+    <input type="radio" name="hero" id="h3">
+    <input type="radio" name="hero" id="h4">
+    <input type="radio" name="hero" id="h5">
+    <input type="radio" name="hero" id="h6">
+    <input type="radio" name="hero" id="h7">
+
+    <div class="c-slides">
+      <div class="c-slide s1"><img src="img/Palermo-Palazzo-Pretorio-bjs2007-01.jpg" alt="Piazza Pretoria, Palermo"></div>
+      <div class="c-slide s2"><img src="img/Piazza_Duomo,_Catania.jpg"               alt="Piazza del Duomo, Catania"></div>
+      <div class="c-slide s3"><img src="img/chiesa.jpg"                              alt="Ortigia, Siracusa"></div>
+      <div class="c-slide s4"><img src="img/messina_duomo_2.jpg"                     alt="Duomo di Messina"></div>
+      <div class="c-slide s5"><img src="img/Ragusa_SanGiorgioCathedral_0169.jpg"     alt="Ragusa Ibla"></div>
+      <div class="c-slide s6"><img src="img/Agrigento-cattedrale.jfif"               alt="Agrigento"></div>
+      <div class="c-slide s7"><img src="img/Chiesa-a-Trapani-Duomo.jpg"              alt="Trapani"></div>
+    </div>
+
+    <div class="btn-grp">
+      <label class="c-btn c-btn-prev p1" for="h7">&#8592;</label>
+      <label class="c-btn c-btn-prev p2" for="h1">&#8592;</label>
+      <label class="c-btn c-btn-prev p3" for="h2">&#8592;</label>
+      <label class="c-btn c-btn-prev p4" for="h3">&#8592;</label>
+      <label class="c-btn c-btn-prev p5" for="h4">&#8592;</label>
+      <label class="c-btn c-btn-prev p6" for="h5">&#8592;</label>
+      <label class="c-btn c-btn-prev p7" for="h6">&#8592;</label>
+      <label class="c-btn c-btn-next n1" for="h2">&#8594;</label>
+      <label class="c-btn c-btn-next n2" for="h3">&#8594;</label>
+      <label class="c-btn c-btn-next n3" for="h4">&#8594;</label>
+      <label class="c-btn c-btn-next n4" for="h5">&#8594;</label>
+      <label class="c-btn c-btn-next n5" for="h6">&#8594;</label>
+      <label class="c-btn c-btn-next n6" for="h7">&#8594;</label>
+      <label class="c-btn c-btn-next n7" for="h1">&#8594;</label>
+    </div>
+
+  </div>
+
+  <div class="home-spacer"></div>
+
+  <!--
+    Email codificata con entità HTML per impedire l'offuscamento di Cloudflare.
+    Il browser la visualizza e la rende cliccabile normalmente:
+    lorenzomusumeci@abacatania.it
+  -->
+  <footer class="site-footer">
+    <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#108;&#111;&#114;&#101;&#110;&#122;&#111;&#109;&#117;&#115;&#117;&#109;&#101;&#99;&#105;&#64;&#97;&#98;&#97;&#99;&#97;&#116;&#97;&#110;&#105;&#97;&#46;&#105;&#116;">&#108;&#111;&#114;&#101;&#110;&#122;&#111;&#109;&#117;&#115;&#117;&#109;&#101;&#99;&#105;&#64;&#97;&#98;&#97;&#99;&#97;&#116;&#97;&#110;&#105;&#97;&#46;&#105;&#116;</a>
+  </footer>
+
+</body>
+</html>

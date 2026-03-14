@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catania — Piazze Siciliane</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="brand">Piazze Siciliane</a>
+    <nav><a href="province.html">Province</a><span class="sep">-</span><a href="attrazioni.html">Attrazioni</a></nav>
+  </header>
+
+  <div class="sub-heading"><h1>Catania</h1></div>
+
+  <div class="detail-wrap">
+    <img class="detail-main-img" src="img/Piazza_Duomo,_Catania.jpg" alt="Piazza del Duomo, Catania">
+    <div class="detail-body">
+      <p>Piazza Duomo è il cuore pulsante e barocco di Catania, ricostruita dopo il 1693 da G.B. Vaccarini. Ospita la Cattedrale di Sant'Agata, il Palazzo degli Elefanti (Municipio) e la fontana dell'Amenano. Al centro si trova la Fontana dell'Elefante, simbolo della città (<em>u Liotru</em>). È il fulcro della vita sociale, turistica e delle festività agatine.</p>
+    </div>
+    <p class="detail-attractions-label">Le attrazioni principali sono:</p>
+    <ul class="detail-list">
+      <li><strong>Cattedrale di Sant'Agata:</strong> Duomo della città, contenente le reliquie della santa.</li>
+      <li><strong>Fontana dell'Elefante:</strong> Obelisco egizio sorretto da un elefante in pietra lavica.</li>
+      <li><strong>Palazzo degli Elefanti:</strong> Sede del comune, situato sul lato nord.</li>
+      <li><strong>Fontana dell'Amenano:</strong> Situata vicino all'ingresso della "Pescheria" (mercato storico).</li>
+      <li><strong>Porta Uzeda:</strong> Collega la piazza a via Etnea e al porto.</li>
+    </ul>
+    <p class="detail-position"><strong>Posizione:</strong> Situata al centro storico, qui convergono via Etnea, via Vittorio Emanuele II e via Garibaldi.</p>
+  </div>
+
+  <!--
+    CAROUSEL SMALL — 5 immagini
+    Per aggiungere una 6a immagine:
+    1) Aggiungi: <input type="radio" name="cat" id="cat-6">
+    2) Aggiungi: <div class="c-slide s6"><img ...></div>
+    3) Nel btn-grp:
+       - Aggiungi: <label class="c-btn c-btn-prev p6" for="cat-5">&#8592;</label>
+       - Cambia l'ultimo next (n5, for="cat-1") in for="cat-6" e aggiungi:
+         <label class="c-btn c-btn-next n6" for="cat-1">&#8594;</label>
+    (le regole CSS per stato 6 sono già in style.css)
+  -->
+  <div class="carousel-wrap carousel-small">
+
+    <input type="radio" name="cat" id="cat-1" checked>
+    <input type="radio" name="cat" id="cat-2">
+    <input type="radio" name="cat" id="cat-3">
+    <input type="radio" name="cat" id="cat-4">
+    <input type="radio" name="cat" id="cat-5">
+
+    <div class="c-slides">
+      <div class="c-slide s1"><img src="img/Catania.jpg"        alt="Cattedrale di Sant'Agata"></div>
+      <div class="c-slide s2"><img src="img/fontana-dellelefante.jpg"          alt="Fontana dell'Elefante"></div>
+      <div class="c-slide s3"><img src="img/palazzo-degli-elefanti_05_870x526.jpg"  alt="Palazzo degli Elefanti"></div>
+      <div class="c-slide s3"><img src="img/passage-reduit.jpg"           alt="Fontana dell'Amenano"></div>
+      <div class="c-slide s5"><img src="img/IMG_4263.jpg"       alt="Porta Uzeda"></div>
+    </div>
+
+    <div class="btn-grp">
+      <label class="c-btn c-btn-prev p2" for="cat-1">&#8592;</label>
+      <label class="c-btn c-btn-prev p3" for="cat-2">&#8592;</label>
+      <label class="c-btn c-btn-prev p4" for="cat-3">&#8592;</label>
+      <label class="c-btn c-btn-prev p5" for="cat-4">&#8592;</label>
+      <label class="c-btn c-btn-next n1" for="cat-2">&#8594;</label>
+      <label class="c-btn c-btn-next n2" for="cat-3">&#8594;</label>
+      <label class="c-btn c-btn-next n3" for="cat-4">&#8594;</label>
+      <label class="c-btn c-btn-next n4" for="cat-5">&#8594;</label>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <a href="/cdn-cgi/l/email-protection#5834372a3d362237352d2b2d353d3b3118393a393b392c3936313976312c"><span class="_
